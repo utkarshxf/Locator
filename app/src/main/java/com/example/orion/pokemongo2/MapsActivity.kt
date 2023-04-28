@@ -11,9 +11,13 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.CallLog
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.widget.ActivityChooserView
 import androidx.core.app.ActivityCompat
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -22,6 +26,8 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.example.orion.pokemongo2.databinding.ActivityMapsBinding
+import com.example.productcontaner.viewmodel.ListViewModel
+import com.example.productcontaner.viewmodel.ListViewModelFactory
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import java.lang.Exception
 import java.util.ArrayList
@@ -31,6 +37,7 @@ import kotlin.concurrent.thread
 
     private lateinit var mMap: GoogleMap
     private lateinit var binding: ActivityMapsBinding
+    private lateinit var myViewModel : ListViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,6 +50,10 @@ import kotlin.concurrent.thread
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+        setupInstances()
+        myViewModel.myResponse.observe(this, Observer {
+            Log.v("qwerty", it.body().toString())
+        })
         checkperm()
         loadpok()
 
@@ -180,7 +191,6 @@ var acc = 123
                                             .icon(BitmapDescriptorFactory.fromResource(newpok.image!!))
                                     )
                                     if (locat!!.distanceTo(newpok.location) < 2) {
-                                        newpok.Iscatch = true
                                         listpok[i] = newpok
                                         playerPower += newpok.power!!
                                         Toast.makeText(
@@ -210,4 +220,11 @@ var acc = 123
         listpok.add(pokemons(R.drawable.dustbin,
             "Smart Dustbin"," It is used for wet and biodegradable wastes",85,37.7816621152613,-122.41225361824 ))
         }
+                private fun setupInstances(){
+                    myViewModel = ViewModelProvider(this , ListViewModelFactory())[ListViewModel::class.java]
+//        calling myviewboject getcall function.
+                    myViewModel.getCall()
+                }
+
+
 }
