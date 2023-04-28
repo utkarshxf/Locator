@@ -1,5 +1,6 @@
             package com.example.orion.pokemongo2
 
+import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.drawable.BitmapDrawable
@@ -28,11 +29,12 @@ import kotlin.concurrent.thread
 
             class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
-    private lateinit var mMap: GoogleMap_
+    private lateinit var mMap: GoogleMap
     private lateinit var binding: ActivityMapsBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
 
         binding = ActivityMapsBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -59,6 +61,23 @@ var acc = 123
         Toast.makeText(this, "user location access on", Toast.LENGTH_LONG).show()
         var myLocation=mylocationl()
         var locationManager=getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return
+        }
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,3,2f,myLocation)
         var myThread=myThread()
         myThread.start()
@@ -76,7 +95,7 @@ var acc = 123
                     getloc()
                 }
                 else{
-                    Toast.makeText(this, "user have bnot given permission", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, "user have not given permission", Toast.LENGTH_LONG).show()
                 }
             }
         }
@@ -140,12 +159,12 @@ var acc = 123
                             mMap.addMarker(
                                 MarkerOptions()
                                     .position(sydney)
-                                    .title("ME")
-                                    .snippet("here is my location with power :" + playerPower )
-                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.mario))
+                                    .title("Your Location")
+                                    .snippet("here is my location")
+                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.myloc))
                             )
-                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 14f))
-                            // show pockemon
+                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 18f))
+                            // show Dustbin
                             for (i in 0..listpok.size - 1) {
                                 var newpok = listpok[i]
                                 if (newpok.Iscatch == false) {
@@ -166,7 +185,7 @@ var acc = 123
                                         playerPower += newpok.power!!
                                         Toast.makeText(
                                             applicationContext,
-                                            "You catch new pockemon your new pwoer is " + playerPower,
+                                            "You Have Reached",
                                             Toast.LENGTH_LONG
                                         ).show()
 
@@ -184,11 +203,11 @@ var acc = 123
         var playerPower=76.0
     var listpok=ArrayList<pokemons>()
     fun loadpok(){
-        listpok.add(pokemons(R.drawable.charmander,
-            "charmander","I split fire sometimes",55,37.7789994893035,-122.401846647263 ))
-        listpok.add(pokemons(R.drawable.squirtle,
-            "charmander","I split water sometimes",75,37.7949568502667,-122.410494089127 ))
-        listpok.add(pokemons(R.drawable.bulbasaur,
-            "charmander","I love leaf sometimes",85,37.7816621152613,-122.41225361824 ))
+        listpok.add(pokemons(R.drawable.dustbin,
+            "Smart Dustbin","It is used for waste that is not biodegradable.",55,20.3555,85.8161 ))
+        listpok.add(pokemons(R.drawable.dustbin,
+            "Smart Dustbin","It is used for dry and non-biodegradable wastes",75,37.7949568502667,-122.410494089127 ))
+        listpok.add(pokemons(R.drawable.dustbin,
+            "Smart Dustbin"," It is used for wet and biodegradable wastes",85,37.7816621152613,-122.41225361824 ))
         }
 }

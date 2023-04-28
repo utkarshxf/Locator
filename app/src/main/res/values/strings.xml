@@ -1,4 +1,4 @@
 <resources>
-    <string name="app_name">pokemon go2</string>
-    <string name="title_activity_maps">MapsActivity</string>
+    <string name="app_name">Locator</string>
+    <string name="title_activity_maps">Locator</string>
 </resources>
